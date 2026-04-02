@@ -3,31 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WellnessHub | Initial Setup</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>WellnessHub | Are You a Student?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="app.js"></script>
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4f46e5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .container { width: 100%; max-width: 560px; }
+        .step-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        p.sub {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.75);
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+        .option-card {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 1.25rem;
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            text-align: center;
+            color: white;
+        }
+        .option-card:hover {
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-4px);
+        }
+        .option-card .emoji { font-size: 3rem; margin-bottom: 0.75rem; }
+        .option-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .option-card p { font-size: 0.85rem; color: rgba(255,255,255,0.65); }
+        .option-card.student { border-color: rgba(167,139,250,0.5); }
+        .option-card.student:hover { border-color: #a78bfa; background: rgba(167,139,250,0.15); }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-900 h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+<body>
+    <div class="container">
+        <div class="step-label">Step 1 of 2 — Profile Setup</div>
+        <h1>Are you a student? 🎓</h1>
+        <p class="sub">WellnessHub provides highly tailored support for academic stress and mental health.</p>
 
-    <div class="sm:mx-auto sm:w-full sm:max-w-2xl text-center mb-10">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900">Are you currently a student?</h2>
-        <p class="mt-2 text-gray-500">WellnessHub provides highly tailored models for academic tracking.</p>
-    </div>
-
-    <div class="mx-auto max-w-3xl w-full px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button onclick="selectStudent(true)" class="bg-white border border-gray-200 hover:border-indigo-500 hover:ring-1 ring-indigo-500 rounded-xl p-8 text-left transition-all shadow-sm">
-                <svg class="w-8 h-8 text-indigo-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
-                <h3 class="text-xl font-bold text-gray-900 mb-1">Yes, Student</h3>
-                <p class="text-sm text-gray-500">I need academic and mental equilibrium support tracking.</p>
-            </button>
-            <button onclick="selectStudent(false)" class="bg-white border border-gray-200 hover:border-gray-400 rounded-xl p-8 text-left transition-all shadow-sm">
-                <svg class="w-8 h-8 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                <h3 class="text-xl font-bold text-gray-900 mb-1">No, Professional</h3>
-                <p class="text-sm text-gray-500">I am looking for general wellness metric pipelines.</p>
-            </button>
+        <div class="grid">
+            <div class="option-card student" onclick="selectStudent(true)">
+                <div class="emoji">📚</div>
+                <h3>Yes, I'm a Student</h3>
+                <p>Get academic stress tracking, exam-based tips, and mental wellness support.</p>
+            </div>
+            <div class="option-card" onclick="selectStudent(false)">
+                <div class="emoji">💼</div>
+                <h3>No, I'm a Professional</h3>
+                <p>General wellness tracking for non-student users.</p>
+            </div>
         </div>
     </div>
 
@@ -35,7 +88,7 @@
         checkAuth(true);
         function selectStudent(isStudent) {
             if (!isStudent) {
-                alert('Currently, our SaaS product only processes student wellness profiles. You will be signed out.');
+                alert('Currently, WellnessHub is designed exclusively for students. You will be signed out.');
                 logout();
                 return;
             }

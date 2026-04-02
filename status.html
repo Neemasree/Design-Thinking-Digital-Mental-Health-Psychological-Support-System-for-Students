@@ -81,6 +81,14 @@
                                 <dt class="text-sm font-medium text-gray-500">Personal Life Challenges</dt>
                                 <dd class="mt-1 text-xl font-bold text-gray-900" id="challengesDisplay">Loading...</dd>
                             </div>
+                            <div class="sm:col-span-1 border border-gray-100 p-4 rounded-lg bg-gray-50">
+                                <dt class="text-sm font-medium text-gray-500">System Emotional Analysis</dt>
+                                <dd class="mt-1 text-xl font-bold text-gray-900" id="emotionalAnalysis">Loading...</dd>
+                            </div>
+                            <div class="sm:col-span-1 border border-gray-100 p-4 rounded-lg bg-gray-50">
+                                <dt class="text-sm font-medium text-gray-500">Current Risk Level</dt>
+                                <dd class="mt-1 text-xl font-bold text-gray-900" id="riskLevelDisplay">Loading...</dd>
+                            </div>
                         </dl>
                         <div class="mt-8 pt-6 border-t border-gray-100">
                             <button onclick="window.location.href='assessment.html'" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
@@ -129,6 +137,10 @@
             document.getElementById('examsDisplay').textContent = labels.exams[asm.exams] || 'Evaluated';
             document.getElementById('personalityDisplay').textContent = labels.personality[asm.personality] || 'Evaluated';
             document.getElementById('challengesDisplay').textContent = labels.challenges[asm.challenges] || 'Evaluated';
+
+            const analysis = analyzeState(state);
+            document.getElementById('emotionalAnalysis').textContent = analysis.emotionalState;
+            document.getElementById('riskLevelDisplay').textContent = analysis.riskLevel;
         }
     </script>
 </body>

@@ -77,20 +77,37 @@
                     </div>
                 </div>
 
-                <!-- Emergency Contact UI -->
+                <!-- Panic + Support UI -->
                 <div class="bg-red-50 border border-red-200 rounded-xl p-8 shadow-sm">
                     <h2 class="text-xl font-bold text-red-800 mb-2">Critical Support Network</h2>
-                    <p class="text-red-700 text-sm mb-6 max-w-2xl">If there is immediate distress or potential for self-harm, please utilize the provided emergency resources immediately.</p>
-                    
-                    <button onclick="alert('🆘 CRISIS HOTLINE: 1-800-273-TALK\n\nTEXT CRISIS: Text HOME to 741741\n\nEMERGENCY: DIAL 911.')" class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-md shadow-sm transition">
-                        Access Emergency Numbers
-                    </button>
+                    <p class="text-red-700 text-sm mb-6 max-w-2xl">If there is immediate distress, use panic mode. The app will attempt to connect a volunteer first, then provide instant calming support if all are busy.</p>
+
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <button onclick="activatePanicSupport()" class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-md shadow-sm transition">
+                            Activate Panic Support
+                        </button>
+                        <button onclick="showEmergencyContacts()" class="w-full md:w-auto px-8 py-3 bg-white border border-red-300 text-red-700 hover:bg-red-100 font-semibold rounded-md shadow-sm transition">
+                            Emergency Numbers
+                        </button>
+                    </div>
+                    <p id="panicResult" class="mt-4 text-sm text-red-800"></p>
                 </div>
 
             </div>
         </div>
     </main>
 
-    <script>checkAuth(true);</script>
+    <script>
+        checkAuth(true);
+
+        function activatePanicSupport() {
+            const result = requestPanicSupport();
+            document.getElementById('panicResult').textContent = result.message;
+        }
+
+        function showEmergencyContacts() {
+            alert('CRISIS HOTLINE: 1-800-273-TALK\nTEXT CRISIS: Text HOME to 741741\nEMERGENCY: Call 911');
+        }
+    </script>
 </body>
 </html>

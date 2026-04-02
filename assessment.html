@@ -4,152 +4,233 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WellnessHub | Onboarding Assessment</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="app.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .assessment-radio:checked + div { border-color: #6366f1; background-color: #f5f3ff; }
-        .assessment-radio:checked + div .icon { color: #6366f1; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { width: 100%; max-width: 640px; }
+        .step-label { color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; text-align: center; }
+        h1 { font-size: 2rem; font-weight: 800; color: white; text-align: center; margin-bottom: 0.5rem; }
+        p.sub { font-size: 1rem; color: rgba(255,255,255,0.7); text-align: center; margin-bottom: 2.5rem; }
+        .progress-bar { background: rgba(255,255,255,0.2); border-radius: 999px; height: 6px; margin-bottom: 2.5rem; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #a78bfa, #818cf8); border-radius: 999px; transition: width 0.5s ease; }
+        .q-card { background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 1.25rem; padding: 2rem; margin-bottom: 1.25rem; }
+        .q-card h3 { font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.6rem; }
+        .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+        @media (max-width: 480px) { .options { grid-template-columns: 1fr; } }
+        .option-btn { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 0.9rem; padding: 1rem 0.75rem; cursor: pointer; text-align: center; transition: all 0.2s; color: white; }
+        .option-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.5); }
+        .option-btn.selected { background: rgba(167,139,250,0.25); border-color: #a78bfa; }
+        .option-btn .opt-emoji { font-size: 1.8rem; display: block; margin-bottom: 0.5rem; }
+        .option-btn .opt-label { font-size: 0.8rem; font-weight: 600; }
+        .option-btn .opt-sub { font-size: 0.7rem; color: rgba(255,255,255,0.55); margin-top: 0.2rem; }
+        .btn-submit { width: 100%; padding: 1rem; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; font-weight: 700; font-size: 1rem; border: none; border-radius: 0.9rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; margin-top: 0.5rem; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,70,229,0.5); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Analysis overlay */
+        #analysisOverlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        #analysisOverlay.show { display: flex; }
+        .analysis-card { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 1.5rem; padding: 2.5rem; max-width: 480px; width: 100%; text-align: center; }
+        .analysis-card h2 { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 0.5rem; }
+        .analysis-card p { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 2rem; }
+        .analysis-steps { text-align: left; space-y: 1rem; }
+        .a-step { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; background: rgba(255,255,255,0.05); margin-bottom: 0.75rem; color: white; font-size: 0.9rem; font-weight: 500; opacity: 0.4; transition: opacity 0.4s, background 0.4s; }
+        .a-step.active { opacity: 1; background: rgba(167,139,250,0.2); }
+        .a-step.done { opacity: 1; background: rgba(52,211,153,0.15); }
+        .a-step .icon { font-size: 1.2rem; }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .result-badge { display: inline-block; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; margin: 0.3rem; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+<body>
+    <div class="container" id="formContainer">
+        <div class="step-label">Step 2 of 2 — Your Wellbeing Profile</div>
+        <h1>Let's understand you better 💬</h1>
+        <p class="sub">Answer 4 quick questions — no typing needed. Just tap your answers!</p>
 
-    <div class="max-w-3xl mx-auto">
-        <div class="text-center mb-10">
-            <svg class="mx-auto h-12 w-12 text-indigo-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-            <h2 class="text-3xl font-bold tracking-tight text-gray-900">Configure Your Profile</h2>
-            <p class="mt-2 text-gray-500">Please provide a baseline measurement across four core categories.</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
         </div>
 
-        <form id="assessmentForm" onsubmit="event.preventDefault(); submitAssessment();" class="space-y-8 bg-white p-8 md:p-12 shadow-sm border border-gray-200 rounded-2xl">
-            
-            <!-- Question 1 -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 mb-4">1. Stress Measurement</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label class="cursor-pointer">
-                        <input type="radio" name="stress" value="not_stressed" required class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Nominal</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="stress" value="moderately_stressed" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Elevated</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="stress" value="very_stressed" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Critical</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Question 2 -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 mb-4">2. Academic Milestones</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label class="cursor-pointer">
-                        <input type="radio" name="exams" value="no_exams" required class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Clear Horizon</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="exams" value="exams_soon" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Upcoming (2wks)</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="exams" value="exams_very_soon" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Immediate</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Question 3 -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 mb-4">3. Social Interaction Style</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label class="cursor-pointer">
-                        <input type="radio" name="personality" value="introvert" required class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Introverted</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="personality" value="ambivert" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Balanced</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="personality" value="extrovert" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Extroverted</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Question 4 -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 mb-4">4. Extraneous Blockers</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label class="cursor-pointer">
-                        <input type="radio" name="challenges" value="no_challenges" required class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">None Recorded</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="challenges" value="minor_challenges" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Minor Disruptions</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="challenges" value="major_challenges" class="assessment-radio hidden">
-                        <div class="border border-gray-200 rounded-lg p-5 text-center transition-colors hover:border-indigo-300">
-                            <span class="block text-sm font-semibold text-gray-900 icon transition-colors">Severe Blockers</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <div class="pt-6">
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Initialize Dashboard Ecosystem
+        <div class="q-card">
+            <h3><span>😊</span> How are you feeling right now?</h3>
+            <div class="options">
+                <button class="option-btn" data-name="mood" data-value="great" onclick="selectOption(this)">
+                    <span class="opt-emoji">🤩</span><span class="opt-label">Amazing!</span><div class="opt-sub">Energized & happy</div>
+                </button>
+                <button class="option-btn" data-name="mood" data-value="okay" onclick="selectOption(this)">
+                    <span class="opt-emoji">😐</span><span class="opt-label">Just okay</span><div class="opt-sub">Neither good nor bad</div>
+                </button>
+                <button class="option-btn" data-name="mood" data-value="struggling" onclick="selectOption(this)">
+                    <span class="opt-emoji">😔</span><span class="opt-label">Struggling</span><div class="opt-sub">Feeling overwhelmed</div>
                 </button>
             </div>
-            
-        </form>
+        </div>
+
+        <div class="q-card">
+            <h3><span>📅</span> Are exams near?</h3>
+            <div class="options">
+                <button class="option-btn" data-name="exams" data-value="no_exams" onclick="selectOption(this)">
+                    <span class="opt-emoji">😌</span><span class="opt-label">No exams soon</span><div class="opt-sub">Clear horizon</div>
+                </button>
+                <button class="option-btn" data-name="exams" data-value="exams_soon" onclick="selectOption(this)">
+                    <span class="opt-emoji">📆</span><span class="opt-label">Within 2 weeks</span><div class="opt-sub">Approaching soon</div>
+                </button>
+                <button class="option-btn" data-name="exams" data-value="exams_very_soon" onclick="selectOption(this)">
+                    <span class="opt-emoji">🚨</span><span class="opt-label">This week!</span><div class="opt-sub">Very urgent</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="q-card">
+            <h3><span>🌡️</span> What's your current stress level?</h3>
+            <div class="options">
+                <button class="option-btn" data-name="stress" data-value="not_stressed" onclick="selectOption(this)">
+                    <span class="opt-emoji">🟢</span><span class="opt-label">Low / Calm</span><div class="opt-sub">I feel in control</div>
+                </button>
+                <button class="option-btn" data-name="stress" data-value="moderately_stressed" onclick="selectOption(this)">
+                    <span class="opt-emoji">🟡</span><span class="opt-label">Moderate</span><div class="opt-sub">Feeling the pressure</div>
+                </button>
+                <button class="option-btn" data-name="stress" data-value="very_stressed" onclick="selectOption(this)">
+                    <span class="opt-emoji">🔴</span><span class="opt-label">Very High</span><div class="opt-sub">Really struggling</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="q-card">
+            <h3><span>🧩</span> Any personal situations affecting you?</h3>
+            <div class="options">
+                <button class="option-btn" data-name="challenges" data-value="no_challenges" onclick="selectOption(this)">
+                    <span class="opt-emoji">✅</span><span class="opt-label">None</span><div class="opt-sub">Life is steady</div>
+                </button>
+                <button class="option-btn" data-name="challenges" data-value="minor_challenges" onclick="selectOption(this)">
+                    <span class="opt-emoji">⚡</span><span class="opt-label">Minor issues</span><div class="opt-sub">Small disruptions</div>
+                </button>
+                <button class="option-btn" data-name="challenges" data-value="major_challenges" onclick="selectOption(this)">
+                    <span class="opt-emoji">🌊</span><span class="opt-label">Major challenges</span><div class="opt-sub">Hard times right now</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="q-card">
+            <h3><span>🗣️</span> How do you usually recharge?</h3>
+            <div class="options">
+                <button class="option-btn" data-name="personality" data-value="introvert" onclick="selectOption(this)">
+                    <span class="opt-emoji">📖</span><span class="opt-label">Quiet time</span><div class="opt-sub">I recharge alone</div>
+                </button>
+                <button class="option-btn" data-name="personality" data-value="ambivert" onclick="selectOption(this)">
+                    <span class="opt-emoji">⚖️</span><span class="opt-label">Both ways</span><div class="opt-sub">Depends on the day</div>
+                </button>
+                <button class="option-btn" data-name="personality" data-value="extrovert" onclick="selectOption(this)">
+                    <span class="opt-emoji">🧑‍🤝‍🧑</span><span class="opt-label">With people</span><div class="opt-sub">I recharge socially</div>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" disabled onclick="submitAssessment()">
+            🚀 Analyze My Profile
+        </button>
+    </div>
+
+    <!-- Step 3: System Analysis Overlay -->
+    <div id="analysisOverlay">
+        <div class="analysis-card">
+            <div class="spinner" id="spinner"></div>
+            <h2>Analyzing Your Profile 🧠</h2>
+            <p>Our system is building your personalized wellness dashboard...</p>
+            <div class="analysis-steps">
+                <div class="a-step" id="step1"><span class="icon">😔</span> Reading emotional state...</div>
+                <div class="a-step" id="step2"><span class="icon">📚</span> Evaluating academic stress...</div>
+                <div class="a-step" id="step3"><span class="icon">🎯</span> Matching personalized content...</div>
+                <div class="a-step" id="step4"><span class="icon">✅</span> Dashboard ready!</div>
+            </div>
+            <div id="analysisResult" style="margin-top:1.5rem; display:none;">
+                <p style="color:rgba(255,255,255,0.8); font-size:0.85rem; margin-bottom:0.75rem;">Your profile summary:</p>
+                <div id="resultBadges"></div>
+            </div>
+        </div>
     </div>
 
     <script>
         checkAuth(true);
+        const answers = {};
+        const totalQuestions = 5;
+
+        function selectOption(btn) {
+            const name = btn.dataset.name;
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            answers[name] = btn.dataset.value;
+            const count = Object.keys(answers).length;
+            document.getElementById('progressFill').style.width = (count / totalQuestions * 100) + '%';
+            document.getElementById('submitBtn').disabled = count < totalQuestions;
+        }
 
         function submitAssessment() {
-            const form = document.getElementById('assessmentForm');
-            const stress = form.querySelector('input[name="stress"]:checked')?.value;
-            const exams = form.querySelector('input[name="exams"]:checked')?.value;
-            const personality = form.querySelector('input[name="personality"]:checked')?.value;
-            const challenges = form.querySelector('input[name="challenges"]:checked')?.value;
-
-            if (!stress || !exams || !personality || !challenges) return;
-
+            if (Object.keys(answers).length < totalQuestions) return;
             const state = getAppState();
-            state.assessment = { stress, exams, personality, challenges };
+            state.assessment = {
+                mood: answers.mood,
+                stress: answers.stress,
+                exams: answers.exams,
+                challenges: answers.challenges,
+                personality: answers.personality
+            };
+            state.moodHistory = state.moodHistory || [];
+            state.moodHistory.push({ mood: answers.mood === 'great' ? 'great' : (answers.mood === 'struggling' ? 'sad' : 'okay'), timestamp: new Date().toLocaleString(), source: 'onboarding' });
             saveAppState(state);
-            
-            window.location.href = 'dashboard.html';
+
+            // Show analysis overlay
+            document.getElementById('analysisOverlay').classList.add('show');
+            runAnalysisAnimation(state.assessment);
+        }
+
+        function runAnalysisAnimation(asm) {
+            const steps = ['step1','step2','step3','step4'];
+            const delays = [600, 1300, 2000, 2700];
+            steps.forEach((id, i) => {
+                setTimeout(() => {
+                    if (i > 0) document.getElementById(steps[i-1]).classList.replace('active','done');
+                    document.getElementById(id).classList.add('active');
+                }, delays[i]);
+            });
+            setTimeout(() => {
+                document.getElementById('step4').classList.replace('active','done');
+                document.getElementById('spinner').style.display = 'none';
+                // Show result badges
+                const moodLabel = { great: '😊 Great Mood', okay: '😐 Neutral Mood', struggling: '😔 Low Mood' };
+                const stressLabel = { not_stressed: '🟢 Low Stress', moderately_stressed: '🟡 Medium Stress', very_stressed: '🔴 High Stress' };
+                const examLabel = { no_exams: '📅 No Exams', exams_soon: '📆 Exams Soon', exams_very_soon: '🚨 Exams This Week' };
+                const colors = { great: '#10b981', okay: '#f59e0b', struggling: '#ef4444', not_stressed: '#10b981', moderately_stressed: '#f59e0b', very_stressed: '#ef4444', no_exams: '#6366f1', exams_soon: '#f59e0b', exams_very_soon: '#ef4444' };
+                const badges = [
+                    { label: moodLabel[asm.mood], color: colors[asm.mood] },
+                    { label: stressLabel[asm.stress], color: colors[asm.stress] },
+                    { label: examLabel[asm.exams], color: colors[asm.exams] }
+                ];
+                document.getElementById('resultBadges').innerHTML = badges.map(b => `<span class="result-badge" style="background:${b.color}22; color:${b.color}; border:1px solid ${b.color}44">${b.label}</span>`).join('');
+                document.getElementById('analysisResult').style.display = 'block';
+            }, 3200);
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 4800);
         }
     </script>
 </body>

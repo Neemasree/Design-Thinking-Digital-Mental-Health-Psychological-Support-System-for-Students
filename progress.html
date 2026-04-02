@@ -60,6 +60,21 @@
 
         <div class="flex-1 overflow-y-auto p-6 md:p-8 bg-gray-50">
             <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Current Emotional State</p>
+                        <p id="emotionMonitor" class="text-lg font-bold text-gray-900">Loading...</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Academic Pressure</p>
+                        <p id="academicMonitor" class="text-lg font-bold text-gray-900">Loading...</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Behavior Trend</p>
+                        <p id="behaviorMonitor" class="text-lg font-bold text-gray-900">Loading...</p>
+                    </div>
+                </div>
+
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="px-6 py-5 border-b border-gray-200">
                         <h3 class="text-lg font-semibold leading-6 text-gray-900">Recent Health Check-ins</h3>
@@ -147,6 +162,11 @@
             }, 3000);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
+
+        const analysis = analyzeState(getAppState());
+        document.getElementById('emotionMonitor').textContent = analysis.emotionalState;
+        document.getElementById('academicMonitor').textContent = analysis.academicStress;
+        document.getElementById('behaviorMonitor').textContent = analysis.behavior;
 
         renderHistory();
     </script>

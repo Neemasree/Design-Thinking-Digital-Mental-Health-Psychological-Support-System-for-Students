@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WellnessHub | Sign In</title>
+    <title>WellnessHub | Create Account</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="app.js"></script>
     <style>
@@ -22,7 +22,7 @@
             border-radius: 1.5rem;
             padding: 2.5rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             box-shadow: 0 25px 60px rgba(0,0,0,0.35);
         }
         .logo { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; }
@@ -57,7 +57,6 @@
         .footer-link { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: #6b7280; }
         .footer-link a { color: #4f46e5; font-weight: 600; text-decoration: none; }
         .footer-link a:hover { text-decoration: underline; }
-        .divider { text-align: center; margin: 1.2rem 0; color: #9ca3af; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -68,41 +67,43 @@
             </div>
             <div class="logo-text">Wellness<span>Hub</span></div>
         </div>
-        <h1>Welcome back 👋</h1>
-        <p class="sub">Sign in to your mental wellness dashboard.</p>
+        <h1>Create your account ✨</h1>
+        <p class="sub">Join thousands of students managing their mental wellbeing.</p>
 
-        <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+        <form id="registerForm" onsubmit="event.preventDefault(); handleRegister();">
+            <div class="field">
+                <label for="nameInput">Full Name</label>
+                <input type="text" id="nameInput" required placeholder="Your name">
+            </div>
             <div class="field">
                 <label for="emailInput">Email address</label>
                 <input type="email" id="emailInput" autocomplete="email" required placeholder="you@university.edu">
             </div>
             <div class="field">
                 <label for="passwordInput">Password</label>
-                <input type="password" id="passwordInput" autocomplete="current-password" required placeholder="••••••••">
+                <input type="password" id="passwordInput" autocomplete="new-password" required placeholder="Min. 6 characters">
             </div>
-            <button type="submit" class="btn-primary">Sign In</button>
+            <button type="submit" class="btn-primary">Create Account & Start Journey</button>
         </form>
 
         <div class="footer-link">
-            Don't have an account? <a href="register.html">Create one free</a>
+            Already have an account? <a href="login.html">Sign in</a>
         </div>
     </div>
 
     <script>
-        function handleLogin() {
+        function handleRegister() {
             const email = document.getElementById('emailInput').value.trim();
-            if (!email) return;
+            const name = document.getElementById('nameInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            if (!email || !name || password.length < 6) {
+                alert('Please fill all fields. Password must be at least 6 characters.');
+                return;
+            }
             const state = getAppState() || {};
-            if (!state.user) {
-                state.user = { email, name: email.split('@')[0] };
-            }
-            state.user.email = email;
+            state.user = { email, name };
             saveAppState(state);
-            if (state.assessment && state.assessment.stress) {
-                window.location.href = 'dashboard.html';
-            } else {
-                window.location.href = 'student-check.html';
-            }
+            window.location.href = 'student-check.html';
         }
 
         window.onload = () => {

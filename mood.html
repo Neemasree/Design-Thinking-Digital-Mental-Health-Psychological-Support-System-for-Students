@@ -57,8 +57,8 @@
             <div class="max-w-md w-full">
                 
                 <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 tracking-tight">How formidible do you feel today?</h2>
-                    <p class="text-gray-500 mt-2 text-sm">Logging consistently uncovers hidden trends in how stress impacts you.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 tracking-tight">How are you feeling today?</h2>
+                    <p class="text-gray-500 mt-2 text-sm">Daily check-ins improve your personalized mental + academic support recommendations.</p>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-2 space-y-2">
@@ -121,10 +121,7 @@
         checkAuth(true);
 
         function logMoodAndRedirect(mood) {
-            const state = getAppState();
-            state.moodHistory = state.moodHistory || [];
-            state.moodHistory.push({ mood, timestamp: new Date().toLocaleString() });
-            saveAppState(state);
+            recordMood(mood, 'daily-checkin');
             window.location.href = 'progress.html?logged=true';
         }
     </script>

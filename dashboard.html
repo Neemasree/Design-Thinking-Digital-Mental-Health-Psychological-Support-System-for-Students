@@ -54,7 +54,7 @@
         <header class="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-200 shrink-0">
             <h1 class="text-xl font-semibold text-gray-800">Overview Dashboard</h1>
             <div class="flex items-center gap-4">
-                <button onclick="window.location.href='community.html'" class="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors">
+                <button onclick="handlePanicFromDashboard()" class="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     Panic Button
                 </button>
@@ -76,23 +76,68 @@
                     </div>
                 </div>
 
-                <!-- Bento Grid -->
+                <!-- Personalized Experience -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Motivational Content (Step 4 & 5) -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                             <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                             Motivational Content
+                        </h3>
+                            <div id="videoContainer" class="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                                <iframe
+                                    id="mainVideoPlayer"
+                                    class="w-full h-full"
+                                    src="https://www.youtube.com/embed/gKUL1VRSzlY"
+                                    title="Motivational video"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allowfullscreen>
+                                </iframe>
+                        </div>
+                        <p class="mt-4 text-sm text-gray-500 italic" id="videoCaption">Handpicked to help with your current stress profile.</p>
+                        <a id="watchRequestedVideo" href="#" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700">Open current video on YouTube</a>
+                        <div id="videoList" class="mt-4 space-y-2"></div>
+                    </div>
+
+                    <!-- Study Guidance & Mental Wellness (Step 4 & 5) -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            Guidance & Study Tips
+                        </h3>
+                        <ul id="dynamicTips" class="space-y-4 overflow-y-auto max-h-64 pr-2">
+                            <!-- Dynamic tips will be injected -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Bento Grid (Mood & Stats) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
                     <!-- Quick Stats (Takes 2 cols) -->
                     <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">Assessment Summary</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">Summary & Monitoring</h3>
                             <a href="status.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">View Full Profile &rarr;</a>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 flex-1">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1">
                             <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
-                                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Reported Stress</p>
+                                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Stress Level</p>
                                 <p id="stressDisplay" class="text-xl font-bold text-gray-900">Evaluating...</p>
                             </div>
                             <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
                                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Exam Timeline</p>
                                 <p id="examsDisplay" class="text-xl font-bold text-gray-900">Evaluating...</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
+                                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Risk Level</p>
+                                <p id="riskDisplay" class="text-xl font-bold text-gray-900">Evaluating...</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
+                                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Mood Streak</p>
+                                <p id="streakDisplay" class="text-xl font-bold text-gray-900">Evaluating...</p>
                             </div>
                         </div>
                     </div>
@@ -102,41 +147,21 @@
                         <div class="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                             <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Check In Today</h3>
-                        <p class="text-sm text-gray-500 px-4">Log your daily mood to track your long-term emotional progress.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Update Daily Mood</h3>
+                        <p class="text-sm text-gray-500 px-4">Continuous behavioral monitoring helps give you better suggestions daily.</p>
                         <span class="mt-4 text-sm font-medium text-indigo-600">Start Check-in &rarr;</span>
                     </div>
 
-                    <!-- Recent Progress Widget -->
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <!-- Recent Mood Entries -->
+                    <div class="md:col-span-3 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">Recent Mood Entries</h3>
-                            <a href="progress.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">View Log &rarr;</a>
+                            <h3 class="text-lg font-semibold text-gray-900">Psychological State Monitoring</h3>
+                            <a href="progress.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">View History &rarr;</a>
                         </div>
                         <div id="moodHistoryMini" class="space-y-3">
                             <!-- JS injected -->
                         </div>
                     </div>
-
-                    <!-- Recommended Resources -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recommended for You</h3>
-                        <ul class="space-y-4">
-                            <li>
-                                <a href="academics.html" class="block p-3 rounded-lg border border-gray-100 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
-                                    <h4 class="text-sm font-semibold text-gray-900">The 4-7-8 Breathing</h4>
-                                    <p class="text-xs text-gray-500 mt-1">Quick exam anxiety relief technique.</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="academics.html" class="block p-3 rounded-lg border border-gray-100 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
-                                    <h4 class="text-sm font-semibold text-gray-900">Pomodoro Study</h4>
-                                    <p class="text-xs text-gray-500 mt-1">25-minute focus intervals for better retention.</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -165,23 +190,74 @@
     <script>
         const state = checkAuth(true);
 
-        // Update Greeting & Overview Stats
-        if (state && state.assessment) {
-            const asm = state.assessment;
+        function handlePanicFromDashboard() {
+            const result = requestPanicSupport();
+            alert(`Panic Support Activated\n\n${result.message}\n\nYou can also open Community for emergency resources.`);
+            window.location.href = 'community.html';
+        }
+
+        // System Analysis & Personalized Content (Step 3, 4, 7)
+        if (state) {
+            const asm = state.assessment || {};
             const labels = {
                 stress: { not_stressed: 'Low Stress', moderately_stressed: 'Medium Stress', very_stressed: 'High Stress' },
                 exams: { no_exams: 'Not Approaching', exams_soon: 'Within 2 Weeks', exams_very_soon: 'This Week' }
             };
-            
-            document.getElementById('stressDisplay').textContent = labels.stress[asm.stress] || 'Evaluated';
-            document.getElementById('examsDisplay').textContent = labels.exams[asm.exams] || 'Evaluated';
+
+            const plan = buildPersonalizedPlan(state);
+
+            document.getElementById('stressDisplay').textContent = labels.stress[asm.stress] || 'Not set yet';
+            document.getElementById('examsDisplay').textContent = labels.exams[asm.exams] || 'Not set yet';
+            document.getElementById('riskDisplay').textContent = plan.analysis.riskLevel;
+            document.getElementById('streakDisplay').textContent = `${plan.analysis.streak} days`;
 
             const greetingElem = document.getElementById('personalizedGreeting');
-            if (asm.stress === 'very_stressed') {
-                greetingElem.textContent = "We noticed your stress levels are elevated. Please take a moment to review our recommended relaxation techniques.";
-            } else if (asm.exams === 'exams_very_soon') {
-                greetingElem.textContent = "Exams are approaching rapidly. Ensure you balance intense focus sessions with adequate rest.";
+            const tipsList = document.getElementById('dynamicTips');
+            const videoCaption = document.getElementById('videoCaption');
+            const videoPlayer = document.getElementById('mainVideoPlayer');
+            const videoList = document.getElementById('videoList');
+            const watchRequestedVideo = document.getElementById('watchRequestedVideo');
+
+            greetingElem.textContent = plan.greeting;
+            videoCaption.textContent = plan.videos[0].caption;
+            videoPlayer.src = buildEmbedUrl(plan.videos[0].videoId);
+
+            watchRequestedVideo.href = buildWatchUrl(plan.videos[0]);
+
+            tipsList.innerHTML = plan.tips.map((tip, idx) => `
+                <li class="p-3 rounded-lg border border-gray-100 bg-gray-50">
+                    <h4 class="text-sm font-bold text-gray-900">Tip ${idx + 1}</h4>
+                    <p class="text-xs text-gray-500 mt-1">${tip}</p>
+                </li>
+            `).join('');
+
+            videoList.innerHTML = plan.videos.map((video, idx) => `
+                <button class="w-full text-left text-sm p-2 rounded border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-colors ${idx === 0 ? 'bg-indigo-50 border-indigo-200' : ''}" onclick="switchVideo('${video.videoId}', '${video.caption.replace(/'/g, "\\'")}', '${buildWatchUrl(video).replace(/'/g, "\\'")}')">
+                    ${video.title}
+                </button>
+            `).join('');
+        }
+
+        function buildWatchUrl(video) {
+            if (video.watchUrl) {
+                return video.watchUrl;
             }
+
+            if (video.videoId) {
+                return `https://www.youtube.com/watch?v=${video.videoId}`;
+            }
+
+            return 'https://www.youtube.com';
+        }
+
+        function buildEmbedUrl(videoId) {
+            return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1`;
+        }
+
+        function switchVideo(videoId, caption, watchUrl) {
+            document.getElementById('mainVideoPlayer').src = buildEmbedUrl(videoId);
+            document.getElementById('videoCaption').textContent = caption;
+            document.getElementById('watchRequestedVideo').href = watchUrl;
         }
 
         // Render mini history
