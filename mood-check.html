@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wellness Hub - Daily Mood Check</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        .btn-primary { @apply px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition; }
+        .btn-secondary { @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="fade-in min-h-screen px-4 py-8 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <span class="text-4xl mr-4">😔</span>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Daily Mood Check</h1>
+                        <p class="text-gray-600">How are you feeling today?</p>
+                    </div>
+                </div>
+                <a href="dashboard.html" class="btn-secondary">← Back to Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Mood Selection -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6 text-center">Select your current mood</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="logMood('great')" class="mood-btn p-6 bg-green-50 hover:bg-green-100 rounded-xl border-2 border-gray-200 hover:border-green-300 transition text-left">
+                    <div class="text-4xl mb-2">😄</div>
+                    <div class="font-semibold text-green-900">Great</div>
+                    <div class="text-sm text-green-700">Feeling amazing today!</div>
+                </button>
+                <button onclick="logMood('good')" class="mood-btn p-6 bg-blue-50 hover:bg-blue-100 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition text-left">
+                    <div class="text-4xl mb-2">😊</div>
+                    <div class="font-semibold text-blue-900">Good</div>
+                    <div class="text-sm text-blue-700">Things are going well</div>
+                </button>
+                <button onclick="logMood('okay')" class="mood-btn p-6 bg-yellow-50 hover:bg-yellow-100 rounded-xl border-2 border-gray-200 hover:border-yellow-300 transition text-left">
+                    <div class="text-4xl mb-2">😐</div>
+                    <div class="font-semibold text-yellow-900">Okay</div>
+                    <div class="text-sm text-yellow-700">Not great, not terrible</div>
+                </button>
+                <button onclick="logMood('sad')" class="mood-btn p-6 bg-orange-50 hover:bg-orange-100 rounded-xl border-2 border-gray-200 hover:border-orange-300 transition text-left">
+                    <div class="text-4xl mb-2">😢</div>
+                    <div class="font-semibold text-orange-900">Sad</div>
+                    <div class="text-sm text-orange-700">Feeling down today</div>
+                </button>
+                <button onclick="logMood('sick')" class="mood-btn p-6 bg-red-50 hover:bg-red-100 rounded-xl border-2 border-gray-200 hover:border-red-300 transition text-left md:col-span-2">
+                    <div class="text-4xl mb-2">🤒</div>
+                    <div class="font-semibold text-red-900">Not well</div>
+                    <div class="text-sm text-red-700">Physically or mentally unwell</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback -->
+        <div id="moodFeedback" class="bg-white rounded-2xl shadow-lg p-6 hidden">
+            <div class="text-center">
+                <div class="text-5xl mb-4" id="feedbackEmoji">😊</div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2" id="feedbackTitle">Thanks for sharing!</h3>
+                <p class="text-gray-600" id="feedbackMessage">We'll keep track of how you're doing. Remember, it's okay to have different feelings.</p>
+            </div>
+        </div>
+
+        <!-- Recent Moods -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Your Recent Moods</h3>
+            <div id="recentMoods" class="space-y-3">
+                <p class="text-gray-600 text-center py-8">No mood entries yet. Start logging to see your progress!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load user data
+    let user = JSON.parse(localStorage.getItem('wellnessUser') || '{}');
+
+    // Check if user is logged in
+    if (!user.loggedIn) {
+        window.location.href = 'login.html';
+    }
+
+    function logMood(mood) {
+        user.moodHistory = user.moodHistory || [];
+        user.moodHistory.push({
+            mood,
+            timestamp: new Date().toLocaleString(),
+            date: new Date().toISOString().split('T')[0]
+        });
+        localStorage.setItem('wellnessUser', JSON.stringify(user));
+
+        // Show feedback
+        const feedback = document.getElementById('moodFeedback');
+        const emoji = { great: '😄', good: '😊', okay: '😐', sad: '😢', sick: '🤒' }[mood];
+        const titles = {
+            great: 'Fantastic!',
+            good: 'Glad to hear!',
+            okay: 'Thanks for sharing',
+            sad: 'We\'re here for you',
+            sick: 'Take care of yourself'
+        };
+        const messages = {
+            great: 'Keep that positive energy going!',
+            good: 'Hope your day continues to be great.',
+            okay: 'Remember, every day is different.',
+            sad: 'It\'s okay to feel this way. You\'re not alone.',
+            sick: 'Rest and take care of yourself. We\'re here when you\'re ready.'
+        };
+
+        document.getElementById('feedbackEmoji').textContent = emoji;
+        document.getElementById('feedbackTitle').textContent = titles[mood];
+        document.getElementById('feedbackMessage').textContent = messages[mood];
+        feedback.classList.remove('hidden');
+
+        // Hide after 5 seconds
+        setTimeout(() => feedback.classList.add('hidden'), 5000);
+
+        displayRecentMoods();
+    }
+
+    function displayRecentMoods() {
+        const container = document.getElementById('recentMoods');
+        if (!user.moodHistory || user.moodHistory.length === 0) {
+            container.innerHTML = '<p class="text-gray-600 text-center py-8">No mood entries yet. Start logging to see your progress!</p>';
+            return;
+        }
+
+        const recent = user.moodHistory.slice(-7).reverse(); // Last 7 entries
+        container.innerHTML = recent.map(entry => {
+            const moodEmoji = { great: '😄', good: '😊', okay: '😐', sad: '😢', sick: '🤒' }[entry.mood];
+            const moodText = { great: 'Great', good: 'Good', okay: 'Okay', sad: 'Sad', sick: 'Not well' }[entry.mood];
+            return `
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">${moodEmoji}</span>
+                        <div>
+                            <div class="font-medium text-gray-900">${moodText}</div>
+                            <div class="text-sm text-gray-600">${entry.timestamp}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Load recent moods on page load
+    displayRecentMoods();
+</script>
+
+</body>
+</html>
